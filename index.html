@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>黄晨乐 · 减脂改善食谱（11岁）</title>
+<style>
+  :root{
+    --green:#1a7f5a; --green-light:#e8f5ef; --green-border:#bfe3d4;
+    --amber:#b45309; --amber-light:#fef6e7; --amber-border:#f5d9a8;
+    --red:#b91c1c; --red-light:#fdeaea; --red-border:#f3c1c1;
+    --ink:#1f2937; --muted:#6b7280; --bg:#f4f7f5; --card:#ffffff;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.65; padding-bottom:48px;
+    -webkit-text-size-adjust:100%; text-size-adjust:100%;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:0 16px;}
+  header{
+    background:linear-gradient(135deg,#0f6b4b,#27a374); color:#fff;
+    padding:32px 0 26px; text-align:center;
+  }
+  header h1{font-size:clamp(20px,4vw,28px); letter-spacing:1px;}
+  header p{opacity:.9; font-size:14px; margin-top:6px;}
+  header .coach{font-size:13px; opacity:.8; letter-spacing:1px; margin-top:8px;}
+
+  .card{
+    background:var(--card); border-radius:14px; padding:20px;
+    margin-top:18px; box-shadow:0 1px 4px rgba(0,0,0,.06);
+  }
+  .card h2{font-size:18px; color:var(--green); margin-bottom:12px; display:flex; align-items:center; gap:8px;}
+  .card h2 .n{
+    background:var(--green); color:#fff; width:24px; height:24px; border-radius:50%;
+    display:inline-flex; align-items:center; justify-content:center; font-size:13px; flex:none;
+  }
+
+  /* 安全底线 */
+  .safety{
+    border:2px solid var(--amber-border); background:var(--amber-light);
+    border-radius:14px; padding:18px 20px; margin-top:18px;
+  }
+  .safety h3{color:var(--amber); font-size:16px; margin-bottom:8px;}
+  .safety li{margin:6px 0 6px 1.2em; font-size:14px;}
+
+  /* 孩子档案 */
+  .profile-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px;}
+  .profile-grid .cell{border:1px solid var(--green-border); border-radius:10px; padding:10px 12px; background:#fafcfb;}
+  .profile-grid small{display:block; font-size:11.5px; color:var(--muted); margin-bottom:2px;}
+  .profile-grid b{font-size:15px;}
+  .profile-grid b.bad{color:var(--red);}
+  .profile-grid b.good{color:var(--green);}
+  .profile-note{font-size:13px; color:var(--muted); margin-top:10px;}
+
+  /* 原则 */
+  .rules{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:10px;}
+  .rule{
+    background:var(--green-light); border:1px solid var(--green-border);
+    border-radius:10px; padding:12px 14px; font-size:14px;
+  }
+  .rule b{color:var(--green);}
+
+  /* 食谱 */
+  .days{display:grid; grid-template-columns:repeat(auto-fit,minmax(290px,1fr)); gap:14px;}
+  .day{
+    border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; background:#fff;
+  }
+  .day-head{
+    background:var(--green); color:#fff; padding:8px 14px;
+    font-weight:600; font-size:15px; display:flex; justify-content:space-between;
+  }
+  .day-head span{font-weight:400; opacity:.85; font-size:12px;}
+  .meal{padding:10px 14px; border-bottom:1px dashed #eee; font-size:13.5px;}
+  .meal:last-child{border-bottom:none;}
+  .meal b{color:var(--green); font-size:13px; display:block; margin-bottom:2px;}
+  .staple-tag{
+    display:inline-block; background:var(--amber-light); border:1px solid var(--amber-border);
+    color:var(--amber); border-radius:6px; padding:0 8px; font-size:12.5px; margin-left:6px;
+  }
+  .day.fat .staple-note-a{display:inline;}
+  .day.fat .staple-note-b{display:none;}
+  .day.normal .staple-note-a{display:none;}
+  .day.normal .staple-note-b{display:inline;}
+
+  /* 红黄绿灯 */
+  .lights{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px;}
+  .light{border-radius:12px; padding:14px 16px; font-size:14px;}
+  .light h3{font-size:15px; margin-bottom:8px;}
+  .light.g{background:var(--green-light); border:1.5px solid var(--green-border);}
+  .light.g h3{color:var(--green);}
+  .light.y{background:var(--amber-light); border:1.5px solid var(--amber-border);}
+  .light.y h3{color:var(--amber);}
+  .light.r{background:var(--red-light); border:1.5px solid var(--red-border);}
+  .light.r h3{color:var(--red);}
+  .light li{margin:4px 0 4px 1.2em;}
+  .light label{display:flex; align-items:flex-start; gap:8px; margin:5px 0; cursor:pointer; font-size:13.5px;}
+  .light input{margin-top:4px; accent-color:var(--green); flex:none;}
+
+  footer{
+    text-align:center; margin-top:28px; font-size:12px; color:var(--muted); padding:0 16px;
+  }
+
+  /* ===== 手机端优化 ===== */
+  @media (max-width:600px){
+    header{padding:22px 0 18px;}
+    .wrap{padding:0 12px;}
+    .card,.safety{padding:14px; margin-top:12px;}
+    .safety li{font-size:13px;}
+    .profile-grid{grid-template-columns:repeat(2,1fr); gap:8px;}
+    .profile-grid .cell{padding:8px 10px;}
+    .profile-grid b{font-size:13.5px;}
+    .profile-note{font-size:12.5px;}
+    .rules{grid-template-columns:1fr; gap:8px;}
+    .rule{font-size:13.5px;}
+    .days{grid-template-columns:1fr; gap:10px;}
+    .meal{font-size:13px; padding:9px 12px;}
+    .lights{grid-template-columns:1fr; gap:10px;}
+    .light{font-size:13.5px;}
+    .light label{font-size:13px;}
+    footer{font-size:11px; margin-top:20px;}
+  }
+
+  /* ===== A4 打印适配 ===== */
+  @media print{
+    @page{size:A4; margin:11mm;}
+    body{
+      background:#fff; padding-bottom:0;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    }
+    .wrap{max-width:100%; padding:0;}
+    header{
+      background:#fff !important; color:#0f6b4b;
+      padding:0 0 6px; border-bottom:2.5px solid #0f6b4b;
+    }
+    header p{color:#555; font-size:12px;}
+    .card,.safety{
+      box-shadow:none; border:1px solid #d5ded9;
+      margin-top:10px; padding:12px 14px; break-inside:avoid-page;
+    }
+    .safety{border:1.5px solid #b45309;}
+    .card h2{font-size:14px; margin-bottom:8px;}
+    /* 五条铁律两列 */
+    .rules{grid-template-columns:1fr 1fr; gap:6px;}
+    .rule{font-size:11px; padding:7px 10px;}
+    /* 一周食谱两列、防跨页断开 */
+    .days{grid-template-columns:1fr 1fr; gap:8px;}
+    .day{break-inside:avoid; border:1px solid #cbd5d0;}
+    .day-head{padding:4px 10px; font-size:12px;}
+    .day-head span{display:none;}
+    .meal{padding:5px 10px; font-size:10.5px;}
+    .meal b{font-size:10.5px;}
+    .staple-tag{font-size:9.5px; padding:0 5px;}
+    /* 红黄绿灯三列压一页 */
+    .lights{grid-template-columns:1fr 1fr 1fr; gap:8px;}
+    .light{break-inside:avoid; font-size:10.5px; padding:8px 10px;}
+    .light h3{font-size:12px;}
+    .light label{font-size:10.5px; margin:3px 0;}
+    .profile-grid .cell{padding:6px 8px;}
+    .profile-grid b{font-size:12px;}
+    .profile-grid small{font-size:9.5px;}
+    .profile-note{font-size:10px;}
+    footer{font-size:9px; margin-top:8px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>🥗 黄晨乐 · 减脂改善食谱（11岁）</h1>
+    <p>家长饮食监控手册 · 不减身高、不挨饿、家常福建口味 · 一周轮换</p>
+    <p class="coach">—— 晋江何教练 · 速乐健运动 ——</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 0. 孩子档案 -->
+  <div class="card">
+    <h2><span class="n">📋</span>黄晨乐 · 饮食方案档案</h2>
+    <div class="profile-grid">
+      <div class="cell"><small>姓名</small><b>黄晨乐</b></div>
+      <div class="cell"><small>性别 / 年龄</small><b>男 · 11岁</b></div>
+      <div class="cell"><small>身高</small><b>160 cm</b></div>
+      <div class="cell"><small>体重</small><b>68.7 kg（137.4 斤）</b></div>
+      <div class="cell"><small>BMI</small><b>26.8</b></div>
+      <div class="cell"><small>体型判定（11岁男标准）</small><b class="bad">肥胖</b></div>
+      <div class="cell"><small>执行版本</small><b class="good">🟠 超重版 · 温和减脂</b></div>
+      <div class="cell"><small>建档日期</small><b>2026-08-19</b></div>
+      <div class="cell"><small>指导教练</small><b>晋江何教练 · 速乐健运动</b></div>
+    </div>
+    <p class="profile-note">下方食谱全部按 <b>🟠 超重版</b> 主食份量（橙色标注）执行：温和缺口、蛋白质和蔬菜管够、不挨饿。体重复测和版本调整由教练跟进，家长照做即可。</p>
+  </div>
+
+  <!-- 1. 安全底线 -->
+  <div class="safety">
+    <h3>⚠️ 先看这几条底线（比食谱本身重要）</h3>
+    <ul>
+      <li><b>孩子不是缩小版大人</b>：禁止生酮、极端低碳、极端节食。11岁马上进入猛长期，身高和青春期发育是硬底线。</li>
+      <li><b>先确认诊断</b>：如果是医院查血（空腹血糖+空腹胰岛素，医生算 HOMA-IR）提示的，按本食谱执行；如果只是猜测（比如脖子发黑、体型胖），建议先去儿科/内分泌科查一次血再定。</li>
+      <li><b>复查节奏</b>：饮食+运动坚持 3 个月复查一次空腹血糖、空腹胰岛素、糖化血红蛋白（HbA1c）。</li>
+      <li>孩子出现头晕、乏力、上课犯困加重等，先加回主食量并咨询医生，别硬扛。</li>
+      <li>本页面是家庭饮食参考，不替代医生的治疗方案。</li>
+    </ul>
+  </div>
+
+  <!-- 3. 核心原则 -->
+  <div class="card">
+    <h2><span class="n">1</span>五条铁律（比记住菜单更重要）</h2>
+    <div class="rules">
+      <div class="rule">🥚 <b>蛋白质每餐打底</b>：蛋、鱼虾、瘦肉、豆制品、纯牛奶/无糖酸奶，每餐先有它。</div>
+      <div class="rule">🍚 <b>主食换一半杂粮</b>：杂粮饭、燕麦、玉米、山药、紫薯替代一半白米白面，升糖慢、扛饿。</div>
+      <div class="rule">🥬 <b>进餐顺序</b>：先吃菜 → 再吃肉蛋 → 最后吃主食。就这一条，餐后血糖都能平缓不少。</div>
+      <div class="rule">🚫 <b>含糖饮料一口不喝</b>：可乐、奶茶、果汁（包括鲜榨）全部戒掉，只喝水、纯牛奶、无糖豆浆。这是见效最快的一条。</div>
+      <div class="rule">🍎 <b>加餐有规矩</b>：只吃无糖酸奶、原味坚果（每天一小把）、整吃水果；糕点、饼干、零食一律不进购物车。</div>
+    </div>
+  </div>
+
+  <!-- 4. 一周食谱 -->
+  <div class="card">
+    <h2><span class="n">2</span>一周轮换食谱</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">
+      菜可以互换、按季节换，但保持结构：<b>每餐 = 蛋白质 + 半盘蔬菜 + 杂粮主食</b>。
+      主食份量统一按 <span class="staple-tag" style="background:var(--amber-light);border-color:var(--amber-border);color:var(--amber);">🟠 橙色标注</span> 执行。
+    </p>
+    <div class="days" id="days">
+
+      <div class="day fat">
+        <div class="day-head">周一 <span>开个好头</span></div>
+        <div class="meal"><b>🌅 早餐</b>水煮蛋 2 个 + 无糖豆浆 1 杯 + 小个杂粮馒头 + 小番茄一把<br><span class="staple-note-a staple-tag">🟠 馒头小个</span><span class="staple-note-b staple-tag">🟢 馒头正常大小</span></div>
+        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 清蒸鲈鱼 + 清炒西兰花 + 紫菜蛋花汤<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🌙 晚餐</b>番茄炖牛腩（选瘦的）+ 清炒菠菜 + 杂粮粥<br><span class="staple-note-a staple-tag">🟠 粥小半碗</span><span class="staple-note-b staple-tag">🟢 粥 1 碗</span></div>
+        <div class="meal"><b>🍎 加餐</b>无糖酸奶 1 杯 + 蓝莓一小把</div>
+      </div>
+
+      <div class="day fat">
+        <div class="day-head">周二 <span>海味日</span></div>
+        <div class="meal"><b>🌅 早餐</b>燕麦牛奶粥（纯燕麦+纯牛奶，不放糖）+ 水煮蛋 1 个 + 核桃 2 颗<br><span class="staple-note-a staple-tag">🟠 燕麦半碗</span><span class="staple-note-b staple-tag">🟢 燕麦 1 碗</span></div>
+        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 白灼虾 10 只 + 蒜蓉空心菜 + 海带排骨汤（撇油，排骨少吃）<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🌙 晚餐</b>虾仁豆腐煲 + 凉拌木耳（少糖）+ 小碗杂粮饭<br><span class="staple-note-a staple-tag">🟠 饭小半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🍎 加餐</b>苹果 1 个（整吃，不榨汁）</div>
+      </div>
+
+      <div class="day fat">
+        <div class="day-head">周三 <span>鸡蛋日</span></div>
+        <div class="meal"><b>🌅 早餐</b>蒸蛋羹（2 蛋）+ 甜玉米 1 根 + 无糖酸奶<br><span class="staple-note-a staple-tag">🟠 玉米半根</span><span class="staple-note-b staple-tag">🟢 玉米 1 根</span></div>
+        <div class="meal"><b>🍱 午餐</b>糙米饭 + 少油香煎鸡胸 + 番茄炒蛋（不放糖）+ 冬瓜汤<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🌙 晚餐</b>清蒸鳕鱼 + 上汤娃娃菜 + 蒸玉米<br><span class="staple-note-a staple-tag">🟠 玉米半根</span><span class="staple-note-b staple-tag">🟢 玉米 1 根</span></div>
+        <div class="meal"><b>🍎 加餐</b>原味坚果一小把（约 15g）+ 小番茄</div>
+      </div>
+
+      <div class="day fat">
+        <div class="day-head">周四 <span>元气日</span></div>
+        <div class="meal"><b>🌅 早餐</b>全麦面包 2 片 + 少油煎蛋 2 个 + 纯牛奶 1 杯 + 黄瓜条<br><span class="staple-note-a staple-tag">🟠 面包 1.5 片</span><span class="staple-note-b staple-tag">🟢 面包 2-3 片</span></div>
+        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 芹菜炒瘦肉 + 凉拌豆腐 + 玉米胡萝卜汤<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🌙 晚餐</b>香菇蒸鸡（去皮）+ 清炒芥蓝 + 小碗杂粮饭<br><span class="staple-note-a staple-tag">🟠 饭小半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🍎 加餐</b>橙子 1 个 + 无糖豆浆</div>
+      </div>
+
+      <div class="day fat">
+        <div class="day-head">周五 <span>闽南味</span></div>
+        <div class="meal"><b>🌅 早餐</b>杂粮粥 + 水煮蛋 + 卤豆腐干（少糖卤法）<br><span class="staple-note-a staple-tag">🟠 粥半碗</span><span class="staple-note-b staple-tag">🟢 粥 1 碗</span></div>
+        <div class="meal"><b>🍱 午餐</b>糙米饭 + 清蒸黄鱼 + 白灼菜心 + 海蛎豆腐汤（少油少淀粉勾芡）<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🌙 晚餐</b>瘦肉冬瓜汤 + 白灼虾 + 蒸山药<br><span class="staple-note-a staple-tag">🟠 山药 2-3 片</span><span class="staple-note-b staple-tag">🟢 山药 1 小节</span></div>
+        <div class="meal"><b>🍎 加餐</b>无糖酸奶 + 草莓一小碗</div>
+      </div>
+
+      <div class="day fat">
+        <div class="day-head">周六 <span>周末吃好点</span></div>
+        <div class="meal"><b>🌅 早餐</b>虾仁蒸蛋 + 蒸紫薯 + 纯牛奶<br><span class="staple-note-a staple-tag">🟠 紫薯小半个</span><span class="staple-note-b staple-tag">🟢 紫薯 1 个</span></div>
+        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 卤牛肉（瘦）+ 清炒油麦菜 + 白萝卜汤<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
+        <div class="meal"><b>🌙 晚餐</b>少油煎牛排 1 块 + 蔬菜沙拉（油醋汁，不用千岛/凯撒）+ 小份糙米饭<br><span class="staple-note-a staple-tag">🟠 饭可省</span><span class="staple-note-b staple-tag">🟢 饭小碗</span></div>
+        <div class="meal"><b>🍎 加餐</b>梨 1 个 + 核桃 2 颗</div>
+      </div>
+
+      <div class="day fat">
+        <div class="day-head">周日 <span>家里吃清淡</span></div>
+        <div class="meal"><b>🌅 早餐</b>无糖豆浆 + 茶叶蛋 2 个（少糖版卤料）+ 蒸紫薯<br><span class="staple-note-a staple-tag">🟠 紫薯小半个</span><span class="staple-note-b staple-tag">🟢 紫薯 1 个</span></div>
+        <div class="meal"><b>🍱 午餐</b>蒸红薯 + 白切鸡（去皮）+ 蒜蓉茼蒿 + 鱼头豆腐汤<br><span class="staple-note-a staple-tag">🟠 红薯小半个</span><span class="staple-note-b staple-tag">🟢 红薯 1 个</span></div>
+        <div class="meal"><b>🌙 晚餐</b>清蒸鱼 + 白灼芦笋 + 杂粮粥<br><span class="staple-note-a staple-tag">🟠 粥小半碗</span><span class="staple-note-b staple-tag">🟢 粥 1 碗</span></div>
+        <div class="meal"><b>🍎 加餐</b>无糖酸奶 1 杯 + 蓝莓</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5. 红黄绿灯 -->
+  <div class="card">
+    <h2><span class="n">3</span>红黄绿灯食物清单（买菜/点外卖前瞄一眼）</h2>
+    <div class="lights">
+      <div class="light g">
+        <h3>🟢 绿灯 · 放心吃</h3>
+        <label><input type="checkbox">绿叶菜、番茄、黄瓜、西兰花等各色蔬菜</label>
+        <label><input type="checkbox">鸡蛋、鱼、虾、贝类（海蛎、花蛤）</label>
+        <label><input type="checkbox">瘦肉、去皮鸡鸭、牛里脊</label>
+        <label><input type="checkbox">豆腐、豆干、无糖豆浆</label>
+        <label><input type="checkbox">纯牛奶、无糖酸奶、原味坚果</label>
+        <label><input type="checkbox">杂粮饭、燕麦、玉米、山药、紫薯</label>
+      </div>
+      <div class="light y">
+        <h3>🟡 黄灯 · 控量吃</h3>
+        <label><input type="checkbox">白米饭、白面条 → 控量+放最后吃，逐步换杂粮</label>
+        <label><input type="checkbox">水果 → 每天 1-2 个拳头的量，整吃不榨汁</label>
+        <label><input type="checkbox">红薯、土豆、南瓜 → 算主食不算菜</label>
+        <label><input type="checkbox">全麦面包 → 看配料表，全麦粉排第一</label>
+        <label><input type="checkbox">汤面/馄饨 → 汤少喝、皮多糖少</label>
+      </div>
+      <div class="light r">
+        <h3>🔴 红灯 · 一口别碰</h3>
+        <label><input type="checkbox">可乐、奶茶、果汁（含鲜榨）、加糖酸奶</label>
+        <label><input type="checkbox">蛋糕、饼干、糖果、巧克力派、辣条</label>
+        <label><input type="checkbox">炸鸡、薯条、鸡排、油条等一切油炸</label>
+        <label><input type="checkbox">白粥+咸菜组合（升糖快、饿得快）</label>
+        <label><input type="checkbox">含糖饮料的"健康马甲"：运动饮料、乳酸菌饮品</label>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    本方案由 <b>晋江何教练 · 速乐健运动</b> 定制指导<br>
+    参考：中国学龄儿童青少年超重肥胖筛查（WS/T 586-2018）· 中国居民膳食指南（2022）· 儿童青少年胰岛素抵抗以生活方式干预为一线<br>
+    本页面是家庭饮食参考，不替代儿科/内分泌科医生诊疗。坚持 3 个月复查：空腹血糖 + 空腹胰岛素 + 糖化血红蛋白。
+  </footer>
+
+</div>
+
+<script>
+  // 页面为纯静态展示：黄晨乐（160cm / 68.7kg → BMI 26.8，肥胖档）
+  // 版本已由教练锁定为 🟠 超重版，day 卡片的 fat class 直接写死在 HTML 中。
+</script>
+
+</body>
+</html>
