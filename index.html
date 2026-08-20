@@ -102,6 +102,56 @@
     text-align:center; margin-top:28px; font-size:12px; color:var(--muted); padding:0 16px;
   }
 
+  /* ===== 导航标签 ===== */
+  .tabs{
+    position:sticky; top:0; z-index:50;
+    display:flex; background:#fff; box-shadow:0 1px 6px rgba(0,0,0,.08);
+  }
+  .tabs button{
+    flex:1; padding:13px 8px; border:none; background:#fff;
+    font-size:15px; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent;
+  }
+  .tabs button.on{color:var(--green); border-bottom-color:var(--green); font-weight:700;}
+  #tab-records{display:none;}
+
+  /* ===== 体测记录 ===== */
+  .form-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:8px;}
+  .form-grid label{display:block; font-size:11.5px; color:var(--muted); margin-bottom:2px;}
+  .form-grid input{
+    width:100%; padding:8px 6px; border:1.5px solid #d1d5db; border-radius:8px;
+    font-size:15px; outline:none;
+  }
+  .form-grid input:focus{border-color:var(--green);}
+  .form-actions{margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;}
+  .btn-main{
+    background:var(--green); color:#fff; border:none; border-radius:10px;
+    padding:11px 24px; font-size:15px; cursor:pointer;
+  }
+  .btn-main:active{transform:scale(.97);}
+  .btn-ghost{
+    background:#fff; color:var(--green); border:1.5px solid var(--green); border-radius:10px;
+    padding:10px 18px; font-size:14px; cursor:pointer;
+  }
+  .chart-box{width:100%; overflow:hidden;}
+  #chart{width:100%; height:230px; display:block;}
+  .table-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .rc-table{border-collapse:collapse; font-size:12px; white-space:nowrap; width:100%;}
+  .rc-table th,.rc-table td{border:1px solid #e2e8e4; padding:6px 8px; text-align:center;}
+  .rc-table th{background:var(--green-light); color:#14532d;}
+  .delta-dn{color:var(--green); font-size:10px;}
+  .delta-up{color:var(--red); font-size:10px;}
+  .del-btn{
+    background:none; border:none; color:#c0c4cc; cursor:pointer; font-size:14px; padding:2px 4px;
+  }
+  .del-btn:hover{color:var(--red);}
+  .backup-area textarea{
+    width:100%; height:76px; border:1.5px dashed #cbd5d0; border-radius:8px;
+    padding:8px; font-size:11px; font-family:monospace; resize:vertical;
+  }
+  .empty-tip{color:var(--muted); font-size:13px; text-align:center; padding:18px 0;}
+  .chart-legend{display:flex; gap:16px; font-size:12px; color:var(--muted); margin-top:6px; justify-content:center;}
+  .chart-legend i{display:inline-block; width:14px; height:3px; border-radius:2px; vertical-align:middle; margin-right:4px;}
+
   /* ===== 手机端优化 ===== */
   @media (max-width:600px){
     header{padding:22px 0 18px;}
@@ -130,6 +180,8 @@
       -webkit-print-color-adjust:exact; print-color-adjust:exact;
     }
     .wrap{max-width:100%; padding:0;}
+    .tabs{display:none;}
+    #tab-records{display:block;}
     header{
       background:#fff !important; color:#0f6b4b;
       padding:0 0 6px; border-bottom:2.5px solid #0f6b4b;
@@ -175,7 +227,12 @@
   </div>
 </header>
 
-<div class="wrap">
+<nav class="tabs">
+  <button id="tabBtnDiet" class="on" onclick="switchTab('diet')">📋 食谱方案</button>
+  <button id="tabBtnRec" onclick="switchTab('rec')">📈 体测记录</button>
+</nav>
+
+<div class="wrap" id="tab-diet">
 
   <!-- 0. 孩子档案 -->
   <div class="card">
@@ -326,9 +383,278 @@
 
 </div>
 
+<div class="wrap" id="tab-records">
+
+  <!-- 录入表单 -->
+  <div class="card">
+    <h2><span class="n">➕</span>新增体测记录</h2>
+    <form id="recForm" onsubmit="saveRecord(event)">
+      <div class="form-grid">
+        <div><label>日期</label><input type="date" id="f_date" required></div>
+        <div><label>体重（kg）</label><input type="number" id="f_w" step="0.1" inputmode="decimal" placeholder="68.7"></div>
+        <div><label>胸围（cm）</label><input type="number" id="f_chest" step="0.1" inputmode="decimal"></div>
+        <div><label>腰围（cm）</label><input type="number" id="f_waist" step="0.1" inputmode="decimal"></div>
+        <div><label>臀围（cm）</label><input type="number" id="f_hip" step="0.1" inputmode="decimal"></div>
+        <div><label>左大腿</label><input type="number" id="f_thighL" step="0.1" inputmode="decimal"></div>
+        <div><label>右大腿</label><input type="number" id="f_thighR" step="0.1" inputmode="decimal"></div>
+        <div><label>左小腿</label><input type="number" id="f_calfL" step="0.1" inputmode="decimal"></div>
+        <div><label>右小腿</label><input type="number" id="f_calfR" step="0.1" inputmode="decimal"></div>
+        <div><label>左大臂</label><input type="number" id="f_armL" step="0.1" inputmode="decimal"></div>
+        <div><label>右大臂</label><input type="number" id="f_armR" step="0.1" inputmode="decimal"></div>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn-main">💾 保存记录</button>
+        <button type="button" class="btn-ghost" onclick="resetForm()">清空重填</button>
+      </div>
+    </form>
+    <p style="font-size:12px;color:var(--muted);margin-top:10px;">围度单位均为 cm；没量的项留空即可，下次补。</p>
+  </div>
+
+  <!-- 趋势图 -->
+  <div class="card">
+    <h2><span class="n">📈</span>趋势（体重 / 腰围）</h2>
+    <div class="chart-box"><canvas id="chart"></canvas></div>
+    <div class="chart-legend">
+      <span><i style="background:#1a7f5a;"></i>体重 kg</span>
+      <span><i style="background:#b45309;"></i>腰围 cm</span>
+    </div>
+    <p id="chartTip" class="empty-tip" style="display:none;">记录满 2 次后自动画出变化趋势</p>
+  </div>
+
+  <!-- 历史表格 -->
+  <div class="card">
+    <h2><span class="n">📚</span>历史记录</h2>
+    <p id="emptyTip" class="empty-tip" style="display:none;">还没有记录，上完第一节课在上方录入吧</p>
+    <div class="table-wrap">
+      <table class="rc-table" id="rcTable"></table>
+    </div>
+  </div>
+
+  <!-- 备份 -->
+  <div class="card">
+    <h2><span class="n">💾</span>数据备份 / 恢复</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px;">数据存在本手机浏览器里。换手机或清缓存前，点「复制备份」存到备忘录/微信收藏；新设备上粘贴到下面恢复。</p>
+    <div class="form-actions">
+      <button class="btn-main" onclick="exportData()">📤 复制备份</button>
+      <button class="btn-ghost" onclick="importData()">📥 导入恢复</button>
+    </div>
+    <div class="backup-area" style="margin-top:10px;">
+      <textarea id="backupBox" placeholder="恢复时：点「导出恢复」前，先把备份文本粘贴到这里"></textarea>
+    </div>
+  </div>
+
+</div>
+
 <script>
-  // 页面为纯静态展示：黄晨乐（160cm / 68.7kg → BMI 26.8，肥胖档）
-  // 版本已由教练锁定为 🟠 超重版，day 卡片的 fat class 直接写死在 HTML 中。
+  // ===== 导航标签 =====
+  function switchTab(t){
+    document.getElementById('tab-diet').style.display = t === 'diet' ? 'block' : 'none';
+    document.getElementById('tab-records').style.display = t === 'rec' ? 'block' : 'none';
+    document.getElementById('tabBtnDiet').className = t === 'diet' ? 'on' : '';
+    document.getElementById('tabBtnRec').className = t === 'rec' ? 'on' : '';
+    window.scrollTo(0, 0);
+    try{ history.replaceState(null, '', t === 'rec' ? '#rec' : location.pathname); }catch(e){}
+    if(t === 'rec') drawChart();
+  }
+  function applyHash(){
+    switchTab(location.hash === '#rec' ? 'rec' : 'diet');
+  }
+  window.addEventListener('hashchange', applyHash);
+
+  // ===== 体测记录 =====
+  var KEY = 'hcl_body_records_v1';
+  var COLS = [
+    ['date','日期'],['w','体重'],['chest','胸围'],['waist','腰围'],['hip','臀围'],
+    ['thighL','左大腿'],['thighR','右大腿'],['calfL','左小腿'],['calfR','右小腿'],
+    ['armL','左大臂'],['armR','右大臂']
+  ];
+
+  function loadRecs(){
+    try{ return JSON.parse(localStorage.getItem(KEY)) || []; }catch(e){ return []; }
+  }
+  function saveRecs(list){
+    list.sort(function(a,b){ return a.date < b.date ? -1 : 1; });
+    localStorage.setItem(KEY, JSON.stringify(list));
+  }
+
+  function saveRecord(e){
+    e.preventDefault();
+    var rec = { id: Date.now() };
+    COLS.forEach(function(c){ rec[c[0]] = document.getElementById('f_' + c[0]).value.trim(); });
+    if(!rec.date){ alert('日期必填'); return; }
+    var list = loadRecs();
+    // 同日期覆盖旧记录
+    list = list.filter(function(r){ return r.date !== rec.date; });
+    list.push(rec);
+    saveRecs(list);
+    resetForm();
+    render();
+    alert('已保存 ' + rec.date + ' 的记录 ✓');
+  }
+
+  function resetForm(){
+    COLS.forEach(function(c){ document.getElementById('f_' + c[0]).value = ''; });
+    document.getElementById('f_date').value = todayStr();
+  }
+  function todayStr(){
+    var d = new Date();
+    return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
+  }
+
+  function delRecord(id){
+    if(!confirm('删除这条记录？')) return;
+    saveRecs(loadRecs().filter(function(r){ return r.id !== id; }));
+    render();
+  }
+
+  function render(){
+    var list = loadRecs().slice().reverse(); // 最新在前
+    var table = document.getElementById('rcTable');
+    var empty = document.getElementById('emptyTip');
+    if(list.length === 0){
+      table.innerHTML = '';
+      empty.style.display = 'block';
+      drawChart();
+      return;
+    }
+    empty.style.display = 'none';
+    var html = '<tr>' + COLS.map(function(c){ return '<th>' + c[1] + '</th>'; }).join('') + '<th></th></tr>';
+    list.forEach(function(r, i){
+      var prev = list[i+1]; // 上一条（更早）
+      html += '<tr>' + COLS.map(function(c){
+        var k = c[0], v = r[k] || '—';
+        var d = '';
+        if(prev && (k === 'w' || k === 'waist') && r[k] && prev[k]){
+          var diff = (parseFloat(r[k]) - parseFloat(prev[k]));
+          if(Math.abs(diff) >= 0.05){
+            // 体重/腰围下降 = 好（绿色↓），上升 = 提醒（红色↑）
+            var good = diff < 0;
+            d = '<br><span class="' + (good ? 'delta-dn' : 'delta-up') + '">' + (diff>0?'+':'') + diff.toFixed(1) + '</span>';
+          }
+        }
+        return '<td>' + v + d + '</td>';
+      }).join('') + '<td><button class="del-btn" onclick="delRecord(' + r.id + ')">✕</button></td></tr>';
+    });
+    table.innerHTML = html;
+    drawChart();
+  }
+
+  // ===== 趋势图（体重 / 腰围，手绘 canvas）=====
+  function drawChart(){
+    var cv = document.getElementById('chart');
+    var tip = document.getElementById('chartTip');
+    var list = loadRecs();
+    var hasW = list.some(function(r){ return r.w; });
+    var hasWaist = list.some(function(r){ return r.waist; });
+    if(list.length < 2 || (!hasW && !hasWaist)){
+      tip.style.display = 'block';
+      clearChart(cv);
+      return;
+    }
+    tip.style.display = 'none';
+
+    var dpr = window.devicePixelRatio || 1;
+    var W = cv.clientWidth || 340, H = 230;
+    cv.width = W * dpr; cv.height = H * dpr;
+    var ctx = cv.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, W, H);
+
+    var padL = 38, padR = 44, padT = 18, padB = 34;
+    var plotW = W - padL - padR, plotH = H - padT - padB;
+    var n = list.length;
+    function xAt(i){ return n === 1 ? padL + plotW/2 : padL + plotW * i / (n-1); }
+
+    function drawSeries(key, color){
+      var pts = list.map(function(r, i){ return { x: xAt(i), v: r[key] ? parseFloat(r[key]) : null, date: r.date }; });
+      var vals = pts.filter(function(p){ return p.v !== null && !isNaN(p.v); });
+      if(vals.length === 0) return;
+      var min = Math.min.apply(null, vals.map(function(p){ return p.v; }));
+      var max = Math.max.apply(null, vals.map(function(p){ return p.v; }));
+      if(max === min){ min -= 1; max += 1; }
+      var margin = (max - min) * 0.12;
+      min -= margin; max += margin;
+      function yAt(v){ return padT + plotH * (1 - (v - min) / (max - min)); }
+
+      ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.lineJoin = 'round';
+      ctx.beginPath(); var started = false;
+      pts.forEach(function(p){
+        if(p.v === null || isNaN(p.v)){ started = false; return; }
+        if(!started){ ctx.moveTo(p.x, yAt(p.v)); started = true; }
+        else ctx.lineTo(p.x, yAt(p.v));
+      });
+      ctx.stroke();
+      pts.forEach(function(p){
+        if(p.v === null || isNaN(p.v)) return;
+        ctx.fillStyle = color;
+        ctx.beginPath(); ctx.arc(p.x, yAt(p.v), 3, 0, Math.PI*2); ctx.fill();
+      });
+      // 首尾数值标注
+      var first = vals[0], last = vals[vals.length-1];
+      ctx.font = '10px sans-serif'; ctx.fillStyle = color; ctx.textAlign = 'center';
+      ctx.fillText(first.v, Math.max(first.x, padL+12), yAt(first.v) - 8);
+      ctx.fillText(last.v, Math.min(last.x, W - padR + 6), yAt(last.v) - 8);
+      // y 轴刻度
+      ctx.textAlign = 'right'; ctx.fillStyle = '#9ca3af';
+      [min + (max-min)*0.15, (min+max)/2, max - (max-min)*0.15].forEach(function(v){
+        ctx.fillText(Math.round(v*10)/10, padL - 5, yAt(v) + 3);
+      });
+    }
+
+    if(hasW) drawSeries('w', '#1a7f5a');
+    if(hasWaist) drawSeries('waist', '#b45309');
+
+    // x 轴日期
+    var ctx2 = ctx;
+    ctx2.fillStyle = '#9ca3af'; ctx2.font = '10px sans-serif'; ctx2.textAlign = 'center';
+    var step = Math.ceil(n / 6);
+    list.forEach(function(r, i){
+      if(i % step === 0 || i === n-1){
+        ctx2.fillText(r.date.slice(5).replace('-','/'), xAt(i), H - 12);
+      }
+    });
+  }
+  function clearChart(cv){
+    var dpr = window.devicePixelRatio || 1;
+    cv.width = (cv.clientWidth || 340) * dpr; cv.height = 230 * dpr;
+    cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
+  }
+
+  // ===== 备份 / 恢复 =====
+  function exportData(){
+    var box = document.getElementById('backupBox');
+    var text = localStorage.getItem(KEY) || '[]';
+    box.value = text; box.select();
+    try{
+      if(navigator.clipboard){ navigator.clipboard.writeText(text); }
+    }catch(e){}
+    try{ document.execCommand('copy'); }catch(e){}
+    alert('备份文本已填入下方框并尝试复制。\n请全选复制，存到微信收藏或备忘录。');
+  }
+  function importData(){
+    var box = document.getElementById('backupBox');
+    var text = box.value.trim();
+    if(!text){ alert('先把备份文本粘贴到框里'); return; }
+    try{
+      var incoming = JSON.parse(text);
+      if(!Array.isArray(incoming)) throw new Error('格式不对');
+      incoming.forEach(function(r){
+        if(!r.date || !r.id) throw new Error('记录缺字段');
+      });
+      var list = loadRecs();
+      incoming.forEach(function(r){ list = list.filter(function(x){ return x.id !== r.id; }); list.push(r); });
+      saveRecs(list);
+      render();
+      alert('已恢复 ' + incoming.length + ' 条记录 ✓');
+    }catch(e){
+      alert('导入失败：' + e.message + '\n确认粘贴的是完整备份文本。');
+    }
+  }
+
+  // ===== 初始化 =====
+  document.getElementById('f_date').value = todayStr();
+  applyHash();
+  render();
 </script>
 
 </body>
