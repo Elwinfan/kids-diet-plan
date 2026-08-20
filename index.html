@@ -385,31 +385,6 @@
 
 <div class="wrap" id="tab-records">
 
-  <!-- 录入表单 -->
-  <div class="card">
-    <h2><span class="n">➕</span>新增体测记录</h2>
-    <form id="recForm" onsubmit="saveRecord(event)">
-      <div class="form-grid">
-        <div><label>日期</label><input type="date" id="f_date" required></div>
-        <div><label>体重（kg）</label><input type="number" id="f_w" step="0.1" inputmode="decimal" placeholder="68.7"></div>
-        <div><label>胸围（cm）</label><input type="number" id="f_chest" step="0.1" inputmode="decimal"></div>
-        <div><label>腰围（cm）</label><input type="number" id="f_waist" step="0.1" inputmode="decimal"></div>
-        <div><label>臀围（cm）</label><input type="number" id="f_hip" step="0.1" inputmode="decimal"></div>
-        <div><label>左大腿</label><input type="number" id="f_thighL" step="0.1" inputmode="decimal"></div>
-        <div><label>右大腿</label><input type="number" id="f_thighR" step="0.1" inputmode="decimal"></div>
-        <div><label>左小腿</label><input type="number" id="f_calfL" step="0.1" inputmode="decimal"></div>
-        <div><label>右小腿</label><input type="number" id="f_calfR" step="0.1" inputmode="decimal"></div>
-        <div><label>左大臂</label><input type="number" id="f_armL" step="0.1" inputmode="decimal"></div>
-        <div><label>右大臂</label><input type="number" id="f_armR" step="0.1" inputmode="decimal"></div>
-      </div>
-      <div class="form-actions">
-        <button type="submit" class="btn-main">💾 保存记录</button>
-        <button type="button" class="btn-ghost" onclick="resetForm()">清空重填</button>
-      </div>
-    </form>
-    <p style="font-size:12px;color:var(--muted);margin-top:10px;">围度单位均为 cm；没量的项留空即可，下次补。</p>
-  </div>
-
   <!-- 趋势图 -->
   <div class="card">
     <h2><span class="n">📈</span>趋势（体重 / 腰围）</h2>
@@ -423,23 +398,11 @@
 
   <!-- 历史表格 -->
   <div class="card">
-    <h2><span class="n">📚</span>历史记录</h2>
-    <p id="emptyTip" class="empty-tip" style="display:none;">还没有记录，上完第一节课在上方录入吧</p>
+    <h2><span class="n">📚</span>历次体测记录</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:12px;">📐 数据由<b>何教练</b>每次课后统一录入更新，家长只需查看。围度单位 cm。</p>
+    <p id="emptyTip" class="empty-tip" style="display:none;">暂无记录</p>
     <div class="table-wrap">
       <table class="rc-table" id="rcTable"></table>
-    </div>
-  </div>
-
-  <!-- 备份 -->
-  <div class="card">
-    <h2><span class="n">💾</span>数据备份 / 恢复</h2>
-    <p style="font-size:12.5px;color:var(--muted);margin-bottom:10px;">数据存在本手机浏览器里。换手机或清缓存前，点「复制备份」存到备忘录/微信收藏；新设备上粘贴到下面恢复。</p>
-    <div class="form-actions">
-      <button class="btn-main" onclick="exportData()">📤 复制备份</button>
-      <button class="btn-ghost" onclick="importData()">📥 导入恢复</button>
-    </div>
-    <div class="backup-area" style="margin-top:10px;">
-      <textarea id="backupBox" placeholder="恢复时：点「导出恢复」前，先把备份文本粘贴到这里"></textarea>
     </div>
   </div>
 
@@ -461,54 +424,19 @@
   }
   window.addEventListener('hashchange', applyHash);
 
-  // ===== 体测记录 =====
-  var KEY = 'hcl_body_records_v1';
+  // ===== 体测记录（只读档案：数据写死在下方数组，由教练课后发数据给助理更新）=====
   var COLS = [
     ['date','日期'],['w','体重'],['chest','胸围'],['waist','腰围'],['hip','臀围'],
     ['thighL','左大腿'],['thighR','右大腿'],['calfL','左小腿'],['calfR','右小腿'],
     ['armL','左大臂'],['armR','右大臂']
   ];
-
-  function loadRecs(){
-    try{ return JSON.parse(localStorage.getItem(KEY)) || []; }catch(e){ return []; }
-  }
-  function saveRecs(list){
-    list.sort(function(a,b){ return a.date < b.date ? -1 : 1; });
-    localStorage.setItem(KEY, JSON.stringify(list));
-  }
-
-  function saveRecord(e){
-    e.preventDefault();
-    var rec = { id: Date.now() };
-    COLS.forEach(function(c){ rec[c[0]] = document.getElementById('f_' + c[0]).value.trim(); });
-    if(!rec.date){ alert('日期必填'); return; }
-    var list = loadRecs();
-    // 同日期覆盖旧记录
-    list = list.filter(function(r){ return r.date !== rec.date; });
-    list.push(rec);
-    saveRecs(list);
-    resetForm();
-    render();
-    alert('已保存 ' + rec.date + ' 的记录 ✓');
-  }
-
-  function resetForm(){
-    COLS.forEach(function(c){ document.getElementById('f_' + c[0]).value = ''; });
-    document.getElementById('f_date').value = todayStr();
-  }
-  function todayStr(){
-    var d = new Date();
-    return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
-  }
-
-  function delRecord(id){
-    if(!confirm('删除这条记录？')) return;
-    saveRecs(loadRecs().filter(function(r){ return r.id !== id; }));
-    render();
-  }
+  var RECORDS = [
+    { date:'2026-08-20', w:'68.7', chest:'90.8', waist:'', hip:'95.5',
+      thighL:'56.7', thighR:'53.8', calfL:'37', calfR:'37.5', armL:'27.1', armR:'27.5' }
+  ];
 
   function render(){
-    var list = loadRecs().slice().reverse(); // 最新在前
+    var list = RECORDS.slice().reverse(); // 最新在前
     var table = document.getElementById('rcTable');
     var empty = document.getElementById('emptyTip');
     if(list.length === 0){
@@ -533,7 +461,7 @@
           }
         }
         return '<td>' + v + d + '</td>';
-      }).join('') + '<td><button class="del-btn" onclick="delRecord(' + r.id + ')">✕</button></td></tr>';
+      }).join('') + '</tr>';
     });
     table.innerHTML = html;
     drawChart();
@@ -543,7 +471,7 @@
   function drawChart(){
     var cv = document.getElementById('chart');
     var tip = document.getElementById('chartTip');
-    var list = loadRecs();
+    var list = RECORDS;
     var hasW = list.some(function(r){ return r.w; });
     var hasWaist = list.some(function(r){ return r.waist; });
     if(list.length < 2 || (!hasW && !hasWaist)){
@@ -620,39 +548,7 @@
     cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
   }
 
-  // ===== 备份 / 恢复 =====
-  function exportData(){
-    var box = document.getElementById('backupBox');
-    var text = localStorage.getItem(KEY) || '[]';
-    box.value = text; box.select();
-    try{
-      if(navigator.clipboard){ navigator.clipboard.writeText(text); }
-    }catch(e){}
-    try{ document.execCommand('copy'); }catch(e){}
-    alert('备份文本已填入下方框并尝试复制。\n请全选复制，存到微信收藏或备忘录。');
-  }
-  function importData(){
-    var box = document.getElementById('backupBox');
-    var text = box.value.trim();
-    if(!text){ alert('先把备份文本粘贴到框里'); return; }
-    try{
-      var incoming = JSON.parse(text);
-      if(!Array.isArray(incoming)) throw new Error('格式不对');
-      incoming.forEach(function(r){
-        if(!r.date || !r.id) throw new Error('记录缺字段');
-      });
-      var list = loadRecs();
-      incoming.forEach(function(r){ list = list.filter(function(x){ return x.id !== r.id; }); list.push(r); });
-      saveRecs(list);
-      render();
-      alert('已恢复 ' + incoming.length + ' 条记录 ✓');
-    }catch(e){
-      alert('导入失败：' + e.message + '\n确认粘贴的是完整备份文本。');
-    }
-  }
-
   // ===== 初始化 =====
-  document.getElementById('f_date').value = todayStr();
   applyHash();
   render();
 </script>
