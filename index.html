@@ -418,8 +418,8 @@
     <div class="delta-cards" id="deltaCards"></div>
     <div class="chart-box"><canvas id="chart"></canvas></div>
     <div class="chart-legend">
-      <span><i style="background:#1a7f5a;"></i>体重 kg（左轴）</span>
-      <span><i style="background:#b45309;"></i>腰围 cm（右轴）</span>
+      <span><i style="background:#1a7f5a;"></i>体重 kg</span>
+      <span><i style="background:#b45309;"></i>腰围 cm</span>
     </div>
     <p id="chartTip" class="empty-tip" style="display:none;">记录满 2 次后自动画出变化趋势</p>
   </div>
@@ -556,7 +556,7 @@
     ctx.scale(dpr, dpr);
     ctx.clearRect(0, 0, W, H);
 
-    var padL = 38, padR = 44, padT = 18, padB = 34;
+    var padL = 14, padR = 20, padT = 18, padB = 34;
     var plotW = W - padL - padR, plotH = H - padT - padB;
     var n = list.length;
     function xAt(i){ return n === 1 ? padL + plotW/2 : padL + plotW * i / (n-1); }
@@ -594,17 +594,6 @@
       }
       if(vals.length === 1){ labelAt(vals[0]); }
       else { labelAt(first); labelAt(last); }
-      // y 轴刻度：整数刻度（无小数点），浅灰；体重左轴、腰围右轴
-      var side = (key === 'w') ? 'left' : 'right';
-      var lo = Math.floor(min), hi = Math.ceil(max);
-      while(hi - lo < 4){ lo -= 1; hi += 1; }
-      ctx.textAlign = side === 'right' ? 'left' : 'right';
-      ctx.fillStyle = '#b9c4be';
-      ctx.font = '9px sans-serif';
-      var tickX = side === 'right' ? (W - padR + 5) : (padL - 5);
-      [lo, Math.round((lo+hi)/2), hi].forEach(function(v){
-        ctx.fillText(v, tickX, yAt(v) + 3);
-      });
     }
 
     if(hasW) drawSeries('w', '#1a7f5a');
