@@ -113,6 +113,18 @@
   .tabs button.on{color:var(--green); border-bottom-color:var(--green); font-weight:700;}
   #tab-records{display:none;}
 
+  /* ===== 变化成绩单卡片 ===== */
+  .delta-cards{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
+  .dcard{border:1px solid var(--green-border); border-radius:12px; padding:12px 10px; background:var(--green-light); text-align:center;}
+  .dcard small{display:block; font-size:12px; color:var(--muted);}
+  .dcard b{font-size:28px; color:var(--ink); display:block; margin:3px 0 2px; line-height:1.2;}
+  .dcard b i{font-size:13px; font-style:normal; color:var(--muted); margin-left:2px;}
+  .dcard .d-dn{color:var(--green); font-weight:700; font-size:14px;}
+  .dcard .d-up{color:var(--red); font-weight:700; font-size:14px;}
+  .dcard .d-flat{color:var(--muted); font-weight:700; font-size:14px;}
+  .dcard .d-first{color:var(--amber); font-weight:700; font-size:13px;}
+  .dcard em{display:block; font-style:normal; font-size:11px; color:var(--muted); margin-top:4px;}
+
   /* ===== 今日食谱弹窗 ===== */
   .modal-mask{
     position:fixed; inset:0; background:rgba(15,40,30,.5); z-index:100;
@@ -403,10 +415,11 @@
   <!-- 趋势图 -->
   <div class="card">
     <h2><span class="n">📈</span>趋势（体重 / 腰围）</h2>
+    <div class="delta-cards" id="deltaCards"></div>
     <div class="chart-box"><canvas id="chart"></canvas></div>
     <div class="chart-legend">
-      <span><i style="background:#1a7f5a;"></i>体重 kg</span>
-      <span><i style="background:#b45309;"></i>腰围 cm</span>
+      <span><i style="background:#1a7f5a;"></i>体重 kg（左轴）</span>
+      <span><i style="background:#b45309;"></i>腰围 cm（右轴）</span>
     </div>
     <p id="chartTip" class="empty-tip" style="display:none;">记录满 2 次后自动画出变化趋势</p>
   </div>
@@ -461,7 +474,36 @@
       thighL:'', thighR:'', calfL:'', calfR:'', armL:'', armR:'' }
   ];
 
+  // ===== 变化成绩单卡片（家长一眼看结果）=====
+  function renderDeltaCards(){
+    var box = document.getElementById('deltaCards');
+    if(!box) return;
+    var list = RECORDS;
+    function card(title, key, unit){
+      var i = -1;
+      for(var k = list.length - 1; k >= 0; k--){ if(list[k][key]){ i = k; break; } }
+      if(i < 0) return '<div class="dcard"><small>' + title + '</small><b>—</b><span class="d-first">暂无数据</span></div>';
+      var curStr = list[i][key], cur = parseFloat(curStr);
+      var prev = -1;
+      for(var j = i - 1; j >= 0; j--){ if(list[j][key]){ prev = j; break; } }
+      var delta, foot;
+      if(prev < 0){
+        delta = '<span class="d-first">📌 首次记录</span>';
+        foot = list[i].date.slice(5).replace('-','/');
+      } else {
+        var d = Math.round((cur - parseFloat(list[prev][key])) * 10) / 10;
+        var cls = d < 0 ? 'd-dn' : (d > 0 ? 'd-up' : 'd-flat');
+        var arr = d < 0 ? '↓' : (d > 0 ? '↑' : '→');
+        delta = '<span class="' + cls + '">' + arr + ' ' + Math.abs(d) + ' ' + unit + '</span>';
+        foot = list[prev][key] + ' → ' + curStr + ' ' + unit;
+      }
+      return '<div class="dcard"><small>' + title + '</small><b>' + curStr + '<i>' + unit + '</i></b>' + delta + '<em>' + foot + '</em></div>';
+    }
+    box.innerHTML = card('⚖️ 体重', 'w', 'kg') + card('📏 腰围', 'waist', 'cm');
+  }
+
   function render(){
+    renderDeltaCards();
     var list = RECORDS.slice().reverse(); // 最新在前
     var table = document.getElementById('rcTable');
     var empty = document.getElementById('emptyTip');
@@ -543,15 +585,25 @@
         ctx.fillStyle = color;
         ctx.beginPath(); ctx.arc(p.x, yAt(p.v), 3, 0, Math.PI*2); ctx.fill();
       });
-      // 首尾数值标注
+      // 数据点数值标注：单点只标一次；所有标注夹在绘图区内，不飞进两轴刻度区
       var first = vals[0], last = vals[vals.length-1];
       ctx.font = '10px sans-serif'; ctx.fillStyle = color; ctx.textAlign = 'center';
-      ctx.fillText(first.v, Math.max(first.x, padL+12), yAt(first.v) - 8);
-      ctx.fillText(last.v, Math.min(last.x, W - padR + 6), yAt(last.v) - 8);
-      // y 轴刻度
-      ctx.textAlign = 'right'; ctx.fillStyle = '#9ca3af';
-      [min + (max-min)*0.15, (min+max)/2, max - (max-min)*0.15].forEach(function(v){
-        ctx.fillText(Math.round(v*10)/10, padL - 5, yAt(v) + 3);
+      function labelAt(p){
+        var lx = Math.min(Math.max(p.x, padL + 14), W - padR - 14);
+        ctx.fillText(p.v, lx, yAt(p.v) - 8);
+      }
+      if(vals.length === 1){ labelAt(vals[0]); }
+      else { labelAt(first); labelAt(last); }
+      // y 轴刻度：整数刻度（无小数点），浅灰；体重左轴、腰围右轴
+      var side = (key === 'w') ? 'left' : 'right';
+      var lo = Math.floor(min), hi = Math.ceil(max);
+      while(hi - lo < 4){ lo -= 1; hi += 1; }
+      ctx.textAlign = side === 'right' ? 'left' : 'right';
+      ctx.fillStyle = '#b9c4be';
+      ctx.font = '9px sans-serif';
+      var tickX = side === 'right' ? (W - padR + 5) : (padL - 5);
+      [lo, Math.round((lo+hi)/2), hi].forEach(function(v){
+        ctx.fillText(v, tickX, yAt(v) + 3);
       });
     }
 
