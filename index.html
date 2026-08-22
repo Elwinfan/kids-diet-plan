@@ -78,6 +78,10 @@
     display:inline-block; background:var(--amber-light); border:1px solid var(--amber-border);
     color:var(--amber); border-radius:6px; padding:0 8px; font-size:12.5px; margin-left:6px;
   }
+  .kcal-tag{
+    display:inline-block; background:#f0f4f2; border:1px solid #d5ded9; color:#5f6f66;
+    border-radius:6px; padding:0 7px; font-size:11.5px; margin-left:6px; vertical-align:1px;
+  }
   .day.fat .staple-note-a{display:inline;}
   .day.fat .staple-note-b{display:none;}
   .day.normal .staple-note-a{display:none;}
@@ -274,6 +278,7 @@
       <div class="cell"><small>体型判定（11岁男标准）</small><b class="bad">肥胖</b></div>
       <div class="cell"><small>执行版本</small><b class="good">🟠 超重版 · 温和减脂</b></div>
       <div class="cell"><small>建档日期</small><b>2026-08-19</b></div>
+      <div class="cell"><small>基础代谢（估算）</small><b id="bmrCell">—</b></div>
     </div>
     <p class="profile-note">下方食谱全部按 <b>🟠 超重版</b> 主食份量（橙色标注）执行：温和缺口、蛋白质和蔬菜管够、不挨饿。体重复测和版本调整由教练跟进，家长照做即可。</p>
   </div>
@@ -308,6 +313,7 @@
     <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">
       菜可以互换、按季节换，但保持结构：<b>每餐 = 蛋白质 + 半盘蔬菜 + 杂粮主食</b>。
       主食份量统一按 <span class="staple-tag" style="background:var(--amber-light);border-color:var(--amber-border);color:var(--amber);">🟠 橙色标注</span> 执行。
+      全天合计约 <b>1400-1550 kcal</b>（超重版份量估算）。
     </p>
     <div class="days" id="days">
 
@@ -353,7 +359,7 @@
 
       <div class="day fat">
         <div class="day-head">周六 <span>周末吃好点</span></div>
-        <div class="meal"><b>🌅 早餐</b>虾仁蒸蛋 + 蒸紫薯 + 纯牛奶<br><span class="staple-note-a staple-tag">🟠 紫薯小半个</span><span class="staple-note-b staple-tag">🟢 紫薯 1 个</span></div>
+        <div class="meal"><b>🌅 早餐</b>虾仁蒸蛋 + 蒸红薯 + 纯牛奶<br><span class="staple-note-a staple-tag">🟠 红薯小半个</span><span class="staple-note-b staple-tag">🟢 红薯 1 个</span></div>
         <div class="meal"><b>🍱 午餐</b>杂粮饭 + 卤牛肉（瘦）+ 清炒油麦菜 + 白萝卜汤<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
         <div class="meal"><b>🌙 晚餐</b>少油煎牛排 1 块 + 蔬菜沙拉（油醋汁，不用千岛/凯撒）+ 小份糙米饭<br><span class="staple-note-a staple-tag">🟠 饭可省</span><span class="staple-note-b staple-tag">🟢 饭小碗</span></div>
         <div class="meal"><b>🍎 加餐</b>梨 1 个 + 核桃 2 颗</div>
@@ -361,8 +367,8 @@
 
       <div class="day fat">
         <div class="day-head">周日 <span>家里吃清淡</span></div>
-        <div class="meal"><b>🌅 早餐</b>无糖豆浆 + 茶叶蛋 2 个（少糖版卤料）+ 蒸紫薯<br><span class="staple-note-a staple-tag">🟠 紫薯小半个</span><span class="staple-note-b staple-tag">🟢 紫薯 1 个</span></div>
-        <div class="meal"><b>🍱 午餐</b>蒸红薯 + 白切鸡（去皮）+ 蒜蓉茼蒿 + 鱼头豆腐汤<br><span class="staple-note-a staple-tag">🟠 红薯小半个</span><span class="staple-note-b staple-tag">🟢 红薯 1 个</span></div>
+        <div class="meal"><b>🌅 早餐</b>无糖豆浆 + 水煮蛋 2 个 + 蒸紫薯<br><span class="staple-note-a staple-tag">🟠 紫薯小半个</span><span class="staple-note-b staple-tag">🟢 紫薯 1 个</span></div>
+        <div class="meal"><b>🍱 午餐</b>蒸红薯 + 白切鸡（去皮）+ 蒜蓉生菜 + 鱼头豆腐汤<br><span class="staple-note-a staple-tag">🟠 红薯小半个</span><span class="staple-note-b staple-tag">🟢 红薯 1 个</span></div>
         <div class="meal"><b>🌙 晚餐</b>清蒸鱼 + 白灼芦笋 + 杂粮粥<br><span class="staple-note-a staple-tag">🟠 粥小半碗</span><span class="staple-note-b staple-tag">🟢 粥 1 碗</span></div>
         <div class="meal"><b>🍎 加餐</b>无糖酸奶 1 杯 + 蓝莓</div>
       </div>
@@ -637,9 +643,46 @@
     if(e.target === document.getElementById('todayModal')) closeModal();
   }
 
+  // ===== 卡路里标注（按超重版份量估算）+ 基础代谢 =====
+  var KCAL = [
+    [450, 550, 400, 130], // 周一 早/午/晚/加
+    [430, 530, 380,  90], // 周二
+    [400, 560, 400, 110], // 周三
+    [445, 500, 390, 120], // 周四
+    [430, 560, 400, 130], // 周五
+    [420, 560, 450, 100], // 周六
+    [420, 520, 380, 110]  // 周日
+  ];
+  function injectKcal(){
+    var days = document.querySelectorAll('#days .day');
+    for(var di = 0; di < days.length && di < KCAL.length; di++){
+      var meals = days[di].querySelectorAll('.meal');
+      for(var mi = 0; mi < meals.length && mi < KCAL[di].length; mi++){
+        if(KCAL[di][mi] == null) continue;
+        var b = meals[mi].querySelector('b');
+        if(!b || b.parentNode.querySelector('.kcal-tag')) continue;
+        var tag = document.createElement('span');
+        tag.className = 'kcal-tag';
+        tag.textContent = '≈' + KCAL[di][mi] + ' kcal';
+        b.appendChild(tag); // 放进标题内部末尾：早餐 ≈420 kcal 同一行
+      }
+    }
+  }
+  function renderBMR(){
+    var w = null;
+    for(var i = RECORDS.length - 1; i >= 0; i--){ if(RECORDS[i].w){ w = parseFloat(RECORDS[i].w); break; } }
+    var cell = document.getElementById('bmrCell');
+    if(!cell) return;
+    if(w === null){ cell.textContent = '—'; return; }
+    // 11岁男孩 Schofield 公式：BMR = 17.5 × 体重 + 651
+    cell.textContent = '≈' + Math.round(17.5 * w + 651) + ' kcal';
+  }
+
   // ===== 初始化 =====
   applyHash();
   render();
+  injectKcal();
+  renderBMR();
   if(location.hash !== '#rec') showToday();
 </script>
 
