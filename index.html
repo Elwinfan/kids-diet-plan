@@ -82,6 +82,16 @@
     display:inline-block; background:#f0f4f2; border:1px solid #d5ded9; color:#5f6f66;
     border-radius:6px; padding:0 7px; font-size:11.5px; margin-left:6px; vertical-align:1px;
   }
+  /* ===== 三餐样板（自选池） ===== */
+  .pool-title{font-size:15px; font-weight:700; color:var(--green); margin:16px 0 8px;}
+  .pool-title:first-of-type{margin-top:8px;}
+  .pool-item{
+    background:#fff; border:1px solid #e5e7eb; border-radius:10px;
+    padding:10px 12px; font-size:13.5px; display:flex; justify-content:space-between;
+    gap:10px; align-items:baseline; margin-bottom:6px;
+  }
+  .pool-item small{color:var(--muted); font-size:12px; flex:none;}
+  .pool-tip{font-size:12.5px; color:var(--muted); margin:4px 0 8px;}
   .day.fat .staple-note-a{display:inline;}
   .day.fat .staple-note-b{display:none;}
   .day.normal .staple-note-a{display:none;}
@@ -307,73 +317,31 @@
     </div>
   </div>
 
-  <!-- 4. 一周食谱 -->
+  <!-- 4. 三餐样板 -->
   <div class="card">
-    <h2><span class="n">2</span>一周轮换食谱</h2>
-    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">
-      菜可以互换、按季节换，但保持结构：<b>每餐 = 蛋白质 + 半盘蔬菜 + 杂粮主食</b>。
-      主食份量统一按 <span class="staple-tag" style="background:var(--amber-light);border-color:var(--amber-border);color:var(--amber);">🟠 橙色标注</span> 执行。
-      全天合计约 <b>1400-1530 kcal</b>。<b>免开火周</b>：白切鸡/卤牛肉直接卤味店买，杂粮饭一次煮 3 天量分装冷藏、吃时微波 2 分钟。
+    <h2><span class="n">2</span>三餐样板 · 照抄或互换</h2>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:6px;">
+      每餐从下面样板里<b>选一个照抄</b>就行，不用记今天星期几；想换口味按「💡 想换」同类互换，营养不走样。
+      全天合计约 <b>1400-1550 kcal</b>，<b>晚餐主食比午餐减半</b>。
     </p>
-    <div class="days" id="days">
 
-      <div class="day fat">
-        <div class="day-head">周一 <span>开个好头</span></div>
-        <div class="meal"><b>🌅 早餐</b>水煮蛋 2 个 + 无糖豆浆 1 杯 + 小个杂粮馒头 + 小番茄一把<br><span class="staple-note-a staple-tag">🟠 馒头小个</span><span class="staple-note-b staple-tag">🟢 馒头正常大小</span></div>
-        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 煎鸡胸（或便利店即食鸡胸）+ 水焯西兰花 + 紫菜蛋花汤<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🌙 晚餐</b>煎牛排 + 沙拉（或水焯菠菜）+ 杂粮粥<br><span class="staple-note-a staple-tag">🟠 粥小半碗</span><span class="staple-note-b staple-tag">🟢 粥 1 碗</span></div>
-        <div class="meal"><b>🍎 加餐</b>无糖酸奶 1 杯 + 蓝莓一小把</div>
-      </div>
+    <div class="pool-title">🌅 早餐（三选一）</div>
+    <div class="pool-item"><span>A. 水煮蛋 2 个 + 全麦吐司 1-2 片 + 纯牛奶 1 杯</span><small>≈400 kcal</small></div>
+    <div class="pool-item"><span>B. 快熟燕麦 + 纯牛奶冲泡 + 煎蛋 2 个</span><small>≈430 kcal</small></div>
+    <div class="pool-item"><span>C. 香蕉 1 根 + 煎蛋 2 个 + 原味坚果一小把</span><small>≈360 kcal</small></div>
+    <p class="pool-tip">💡 想换：蛋 ↔ 奶 ↔ 豆浆（蛋白互换）；吐司 ↔ 玉米 ↔ 红薯 ↔ 燕麦（主食互换）</p>
 
-      <div class="day fat">
-        <div class="day-head">周二 <span>海味日</span></div>
-        <div class="meal"><b>🌅 早餐</b>燕麦牛奶粥（纯燕麦+纯牛奶，不放糖）+ 水煮蛋 1 个 + 核桃 2 颗<br><span class="staple-note-a staple-tag">🟠 燕麦半碗</span><span class="staple-note-b staple-tag">🟢 燕麦 1 碗</span></div>
-        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 白灼虾 10 只 + 蒜蓉空心菜<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🌙 晚餐</b>虾仁滑蛋（一锅炒）+ 凉拌豆腐 + 小碗杂粮饭<br><span class="staple-note-a staple-tag">🟠 饭小半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🍎 加餐</b>苹果 1 个（整吃，不榨汁）</div>
-      </div>
+    <div class="pool-title">🍱 午餐 / 🌙 晚餐（午晚通用，晚餐主食减半）</div>
+    <div class="pool-item"><span>A. 煎鸡胸 + 水焯西兰花 + 即食杂粮饭半碗</span><small>≈500 kcal</small></div>
+    <div class="pool-item"><span>B. 白灼虾 10 只 + 水煮生菜 + 即食玉米</span><small>≈450 kcal</small></div>
+    <div class="pool-item"><span>C. 卤味店白切鸡（去皮）+ 沙拉（油醋汁）+ 吐司 1 片</span><small>≈480 kcal</small></div>
+    <div class="pool-item"><span>D. 香煎巴沙鱼（或牛排）+ 同锅煎口蘑（或水焯西兰花）+ 玉米半根</span><small>≈470 kcal</small></div>
+    <p class="pool-tip">💡 想换：鸡胸 ↔ 虾 ↔ 鱼排 ↔ 卤味（蛋白互换）；蔬菜随便换绿的；主食：即食杂粮饭（微波 2 分钟）↔ 玉米 ↔ 吐司</p>
 
-      <div class="day fat">
-        <div class="day-head">周三 <span>鸡蛋日</span></div>
-        <div class="meal"><b>🌅 早餐</b>微波蒸蛋（2 蛋）+ 即食玉米 1 根 + 无糖酸奶<br><span class="staple-note-a staple-tag">🟠 玉米半根</span><span class="staple-note-b staple-tag">🟢 玉米 1 根</span></div>
-        <div class="meal"><b>🍱 午餐</b>糙米饭 + 少油香煎鸡胸 + 番茄炒蛋（不放糖）<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🌙 晚餐</b>香煎鳕鱼 + 水焯娃娃菜（点少许酱油）+ 即食玉米<br><span class="staple-note-a staple-tag">🟠 玉米半根</span><span class="staple-note-b staple-tag">🟢 玉米 1 根</span></div>
-        <div class="meal"><b>🍎 加餐</b>原味坚果一小把（约 15g）+ 小番茄</div>
-      </div>
+    <div class="pool-title">🍎 加餐（下午/晚上饿了，选一样）</div>
+    <div class="pool-item"><span>无糖酸奶 1 杯 / 原味坚果一小把 / 水果 1 个（整吃不榨汁）/ 无糖豆浆 1 杯</span><small>≈80-130 kcal</small></div>
 
-      <div class="day fat">
-        <div class="day-head">周四 <span>元气日</span></div>
-        <div class="meal"><b>🌅 早餐</b>全麦面包 2 片 + 少油煎蛋 2 个 + 纯牛奶 1 杯 + 黄瓜条<br><span class="staple-note-a staple-tag">🟠 面包 1.5 片</span><span class="staple-note-b staple-tag">🟢 面包 2-3 片</span></div>
-        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 芹菜炒瘦肉 + 凉拌豆腐<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🌙 晚餐</b>香菇蒸鸡（去皮）+ 清炒芥蓝 + 小碗杂粮饭<br><span class="staple-note-a staple-tag">🟠 饭小半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🍎 加餐</b>橙子 1 个 + 无糖豆浆</div>
-      </div>
-
-      <div class="day fat">
-        <div class="day-head">周五 <span>闽南味</span></div>
-        <div class="meal"><b>🌅 早餐</b>香蕉 1 根 + 少油煎蛋 2 个 + 原味坚果一小把<br><span class="staple-note-a staple-tag">🟠 本餐无主食 · 香蕉补碳</span></div>
-        <div class="meal"><b>🍱 午餐</b>糙米饭 + 香煎龙利鱼（无刺免处理）+ 白灼菜心<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🌙 晚餐</b>便利店即食鸡胸（或煎鸡胸）+ 白灼虾 + 即食玉米<br><span class="staple-note-a staple-tag">🟠 玉米半根</span><span class="staple-note-b staple-tag">🟢 玉米 1 根</span></div>
-        <div class="meal"><b>🍎 加餐</b>无糖酸奶 + 草莓一小碗</div>
-      </div>
-
-      <div class="day fat">
-        <div class="day-head">周六 <span>周末吃好点</span></div>
-        <div class="meal"><b>🌅 早餐</b>虾仁煎蛋（一锅煎）+ 即食玉米 + 纯牛奶<br><span class="staple-note-a staple-tag">🟠 玉米半根</span><span class="staple-note-b staple-tag">🟢 玉米 1 根</span></div>
-        <div class="meal"><b>🍱 午餐</b>杂粮饭 + 卤牛肉（卤味店买）+ 清炒油麦菜<br><span class="staple-note-a staple-tag">🟠 饭半碗</span><span class="staple-note-b staple-tag">🟢 饭 1 碗</span></div>
-        <div class="meal"><b>🌙 晚餐</b>少油煎牛排 1 块 + 蔬菜沙拉（油醋汁，不用千岛/凯撒）+ 小份糙米饭<br><span class="staple-note-a staple-tag">🟠 饭可省</span><span class="staple-note-b staple-tag">🟢 饭小碗</span></div>
-        <div class="meal"><b>🍎 加餐</b>梨 1 个 + 核桃 2 颗</div>
-      </div>
-
-      <div class="day fat">
-        <div class="day-head">周日 <span>家里吃清淡</span></div>
-        <div class="meal"><b>🌅 早餐</b>无糖豆浆 + 全麦吐司鸡蛋三明治（水煮蛋 2 个 + 生菜）<br><span class="staple-note-a staple-tag">🟠 吐司 1 片</span><span class="staple-note-b staple-tag">🟢 吐司 2 片</span></div>
-        <div class="meal"><b>🍱 午餐</b>馒头夹白切鸡 · 中式汉堡（白切鸡卤味店买，去皮 + 生菜番茄，不加酱）<br><span class="staple-note-a staple-tag">🟠 馒头半个</span><span class="staple-note-b staple-tag">🟢 馒头 1 个</span></div>
-        <div class="meal"><b>🌙 晚餐</b>香煎鱼排 + 同锅煎芦笋 + 即食玉米<br><span class="staple-note-a staple-tag">🟠 玉米半根</span><span class="staple-note-b staple-tag">🟢 玉米 1 根</span></div>
-        <div class="meal"><b>🍎 加餐</b>无糖酸奶 1 杯 + 蓝莓</div>
-      </div>
-
-    </div>
+    <p class="pool-tip">🛒 采购口诀：<b>囤蛋白</b>（冰箱：鸡胸、虾、巴沙鱼）、<b>囤主食</b>（微波：即食杂粮饭、玉米、吐司）、<b>蔬菜当天买绿的</b></p>
   </div>
 
   <!-- 5. 红黄绿灯 -->
@@ -440,15 +408,6 @@
     </div>
   </div>
 
-</div>
-
-<!-- 今日食谱弹窗 -->
-<div class="modal-mask" id="todayModal" style="display:none;" onclick="maskClose(event)">
-  <div class="modal-card">
-    <div class="modal-head"><span id="modalTitle">📅 今天</span><button onclick="closeModal()">✕</button></div>
-    <div id="modalDay"></div>
-    <button class="btn-main" style="width:100%; margin-top:12px;" onclick="closeModal()">知道了，开吃 💪</button>
-  </div>
 </div>
 
 <script>
@@ -635,53 +594,7 @@
     cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
   }
 
-  // ===== 今日食谱弹窗 =====
-  function showToday(){
-    var names = ['周一','周二','周三','周四','周五','周六','周日'];
-    var idx = (new Date().getDay() + 6) % 7; // 周一=0 … 周日=6
-    var days = document.querySelectorAll('#days .day');
-    var src = days[idx];
-    if(!src) return;
-    var d = new Date();
-    document.getElementById('modalTitle').textContent =
-      '📅 今天 · ' + names[idx] + ' ' + (d.getMonth()+1) + '月' + d.getDate() + '日';
-    var box = document.getElementById('modalDay');
-    box.innerHTML = '';
-    box.appendChild(src.cloneNode(true));
-    document.getElementById('todayModal').style.display = 'flex';
-  }
-  function closeModal(){
-    document.getElementById('todayModal').style.display = 'none';
-  }
-  function maskClose(e){
-    if(e.target === document.getElementById('todayModal')) closeModal();
-  }
-
-  // ===== 卡路里标注（按超重版份量估算）+ 基础代谢 =====
-  var KCAL = [
-    [450, 550, 400, 130], // 周一 早/午/晚/加
-    [430, 480, 380,  90], // 周二
-    [400, 510, 400, 110], // 周三
-    [445, 450, 390, 120], // 周四
-    [360, 500, 400, 130], // 周五
-    [420, 505, 380, 110], // 周六
-    [430, 505, 380, 110]  // 周日
-  ];
-  function injectKcal(){
-    var days = document.querySelectorAll('#days .day');
-    for(var di = 0; di < days.length && di < KCAL.length; di++){
-      var meals = days[di].querySelectorAll('.meal');
-      for(var mi = 0; mi < meals.length && mi < KCAL[di].length; mi++){
-        if(KCAL[di][mi] == null) continue;
-        var b = meals[mi].querySelector('b');
-        if(!b || b.parentNode.querySelector('.kcal-tag')) continue;
-        var tag = document.createElement('span');
-        tag.className = 'kcal-tag';
-        tag.textContent = '≈' + KCAL[di][mi] + ' kcal';
-        b.appendChild(tag); // 放进标题内部末尾：早餐 ≈420 kcal 同一行
-      }
-    }
-  }
+  // ===== 基础代谢（Schofield 动态计算） =====
   function renderBMR(){
     var w = null;
     for(var i = RECORDS.length - 1; i >= 0; i--){ if(RECORDS[i].w){ w = parseFloat(RECORDS[i].w); break; } }
@@ -695,9 +608,7 @@
   // ===== 初始化 =====
   applyHash();
   render();
-  injectKcal();
   renderBMR();
-  if(location.hash !== '#rec') showToday();
 </script>
 
 </body>
