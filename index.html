@@ -204,6 +204,10 @@
     border-radius:8px; padding:7px 14px; font-size:13px; cursor:pointer; margin-top:10px;
   }
   .plan-dl:active{transform:scale(.97);}
+  .plan-score{
+    background:var(--green-light); border:1px solid var(--green-border); border-radius:8px;
+    padding:8px 12px; font-size:13.5px; font-weight:600; color:#14532d; margin-top:12px;
+  }
 
   /* ===== 手机端优化 ===== */
   @media (max-width:600px){
@@ -679,7 +683,8 @@
           { b: '每一圈的走法', t: '弯道快走 → 直道慢跑 → 弯道快走 → 直道缓走 → 回到教练面前做动作30秒 + 喝2口水 → 击掌，过关！' },
           { b: '5关动作', t: '① 高抬腿走 ② 开合跳（轻跳） ③ 徒手深蹲 ④ 后踢腿走 ⑤ 弓步走10步\n5关 = 5圈 ≈ 2公里' }
         ]}
-      ]
+      ],
+      score: '3:02 / 2:55 / 2:50 / 2:40 / 2:42 · 共 14分09秒，一路提速最后一圈稳住'
     }
   ];
 
@@ -698,6 +703,7 @@
           html += '<p><b>' + l.b + '</b>：' + l.t.replace(/\n/g, '<br>') + '</p>';
         });
       });
+      if(s.score){ html += '<div class="plan-score">⏱️ 过关成绩：' + s.score + '</div>'; }
       html += '</div><button class="plan-dl" onclick="savePlanImg(' + i + ')">📥 存为图片</button></div>';
     });
     box.innerHTML = html;
@@ -725,9 +731,9 @@
     var ctx = cv.getContext('2d');
 
     var items = [];
-    function add(text, font, color, lineH, gap, bar){
+    function add(text, font, color, lineH, gap, bar, box){
       ctx.font = font;
-      items.push({ lines: wrapLines(ctx, text, TW - (bar ? 20 : 0)), font: font, color: color, lineH: lineH, gap: gap, bar: !!bar });
+      items.push({ lines: wrapLines(ctx, text, TW - (bar ? 20 : 0) - (box ? 32 : 0)), font: font, color: color, lineH: lineH, gap: gap, bar: !!bar, box: !!box });
     }
     add(s.meta, '26px ' + FONT, '#6b7280', 38, 30);
     s.blocks.forEach(function(bl){
@@ -736,9 +742,12 @@
         add(l.b + '：' + l.t, '28px ' + FONT, '#1f2937', 42, 10);
       });
     });
+    if(s.score){
+      add('⏱️ 过关成绩：' + s.score, 'bold 28px ' + FONT, '#14532d', 42, 18, false, true);
+    }
 
     var H = HEAD + 16;
-    items.forEach(function(it){ H += it.gap + it.lines.length * it.lineH; });
+    items.forEach(function(it){ H += it.gap + it.lines.length * it.lineH + (it.box ? 26 : 0); });
     H += FOOT;
 
     cv.width = W * SCALE; cv.height = H * SCALE;
@@ -762,13 +771,23 @@
     var y = HEAD + 16 + 36;
     items.forEach(function(it){
       y += it.gap;
+      if(it.box){
+        ctx.fillStyle = '#e8f5ef';
+        var bh = it.lines.length * it.lineH + 18;
+        ctx.beginPath();
+        if(ctx.roundRect){ ctx.roundRect(P, y - 30, TW, bh, 10); }
+        else { ctx.rect(P, y - 30, TW, bh); }
+        ctx.fill();
+        ctx.lineWidth = 1.5; ctx.strokeStyle = '#bfe3d4'; ctx.stroke();
+        y += 6;
+      }
       if(it.bar){
         ctx.fillStyle = '#1a7f5a';
         ctx.fillRect(P, y - 26, 8, 30);
       }
       ctx.font = it.font; ctx.fillStyle = it.color;
       it.lines.forEach(function(ln){
-        ctx.fillText(ln, P + (it.bar ? 22 : 0), y);
+        ctx.fillText(ln, P + (it.bar ? 22 : (it.box ? 16 : 0)), y);
         y += it.lineH;
       });
     });
