@@ -125,7 +125,7 @@
     font-size:15px; color:var(--muted); cursor:pointer; border-bottom:3px solid transparent;
   }
   .tabs button.on{color:var(--green); border-bottom-color:var(--green); font-weight:700;}
-  #tab-records{display:none;}
+  #tab-records,#tab-train{display:none;}
 
   /* ===== 变化成绩单卡片 ===== */
   .delta-cards{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;}
@@ -194,6 +194,12 @@
   .chart-legend{display:flex; gap:16px; font-size:12px; color:var(--muted); margin-top:6px; justify-content:center;}
   .chart-legend i{display:inline-block; width:14px; height:3px; border-radius:2px; vertical-align:middle; margin-right:4px;}
 
+  /* ===== 私教课记录 ===== */
+  .session-meta{font-size:12.5px; color:var(--muted); margin-bottom:10px;}
+  .plan p{font-size:13.5px; margin:6px 0;}
+  .plan b{color:var(--green);}
+  .plan-sec{font-size:15px; font-weight:700; color:var(--green); margin:12px 0 4px;}
+
   /* ===== 手机端优化 ===== */
   @media (max-width:600px){
     header{padding:22px 0 18px;}
@@ -223,7 +229,7 @@
     }
     .wrap{max-width:100%; padding:0;}
     .tabs{display:none;}
-    #tab-records{display:block;}
+    #tab-records,#tab-train{display:block;}
     header{
       background:#fff !important; color:#0f6b4b;
       padding:0 0 6px; border-bottom:2.5px solid #0f6b4b;
@@ -272,6 +278,7 @@
 <nav class="tabs">
   <button id="tabBtnDiet" class="on" onclick="switchTab('diet')">📋 食谱方案</button>
   <button id="tabBtnRec" onclick="switchTab('rec')">📈 体测记录</button>
+  <button id="tabBtnTrain" onclick="switchTab('train')">🏃 私教课</button>
 </nav>
 
 <div class="wrap" id="tab-diet">
@@ -411,19 +418,47 @@
 
 </div>
 
+<div class="wrap" id="tab-train">
+
+  <div class="card">
+    <h2><span class="n">🏃</span>何教练私教课记录</h2>
+    <p class="session-meta">每节课的训练安排都记在这里：课前当预告，课后当存档，最新一节在最上面。</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">15</span>第15节 · 新场地首课</h2>
+    <p class="session-meta">2026-09-13 · 16:30-17:30 · 室内力量 30min + 操场徒手 30min</p>
+    <div class="plan">
+      <div class="plan-sec">🏋️ 室内 30min · 力量循环</div>
+      <p><b>热身 5min</b>：跑步机快走 3min（坡度2、能说话）+ 关节绕环、弓步转体</p>
+      <p><b>主训 22min · 3站循环 × 3轮</b>（动作间休45秒，轮间休75秒）：<br>① 坐姿推胸机 ×12<br>② 高位下拉 ×12<br>③ 哑铃高脚杯深蹲 ×10（5kg 起步，"抱西瓜慢慢坐"）<br>状态好加第4轮（次数减半），不好直接收</p>
+      <p><b>收整 3min</b>：甩腿、胸背各拉20秒，拿水去操场</p>
+      <div class="plan-sec">🏃 户外 30min · 操场闯5关（1关 = 1圈400米）</div>
+      <p><b>每一圈的走法</b>：弯道快走 → 直道慢跑 → 弯道快走 → 直道缓走 → 回到教练面前做动作30秒 + 喝2口水 → 击掌，过关！</p>
+      <p><b>5关动作</b>：① 高抬腿走 ② 开合跳（轻跳） ③ 徒手深蹲 ④ 后踢腿走 ⑤ 弓步走10步<br>5关 = 5圈 ≈ 2公里</p>
+      <p><b>☀️ 防暑</b>：挑有影子的一侧道跑；每过2关喝2-3口水；说有点晕立刻改慢走</p>
+      <p><b>🍌 练后</b>：30min内半根香蕉或一盒纯牛奶（不影响晚餐）</p>
+    </div>
+  </div>
+
+</div>
+
 <script>
   // ===== 导航标签 =====
   function switchTab(t){
     document.getElementById('tab-diet').style.display = t === 'diet' ? 'block' : 'none';
     document.getElementById('tab-records').style.display = t === 'rec' ? 'block' : 'none';
+    document.getElementById('tab-train').style.display = t === 'train' ? 'block' : 'none';
     document.getElementById('tabBtnDiet').className = t === 'diet' ? 'on' : '';
     document.getElementById('tabBtnRec').className = t === 'rec' ? 'on' : '';
+    document.getElementById('tabBtnTrain').className = t === 'train' ? 'on' : '';
     window.scrollTo(0, 0);
-    try{ history.replaceState(null, '', t === 'rec' ? '#rec' : location.pathname); }catch(e){}
+    try{ history.replaceState(null, '', t === 'rec' ? '#rec' : (t === 'train' ? '#train' : location.pathname)); }catch(e){}
     if(t === 'rec') drawChart();
   }
   function applyHash(){
-    switchTab(location.hash === '#rec' ? 'rec' : 'diet');
+    var h = location.hash;
+    switchTab(h === '#rec' ? 'rec' : (h === '#train' ? 'train' : 'diet'));
   }
   window.addEventListener('hashchange', applyHash);
 
