@@ -438,7 +438,7 @@
   <div class="modal-card">
     <div class="modal-head"><span id="imgModalTitle">计划图片</span><button onclick="closeImgModal()">✕</button></div>
     <img id="imgOut" style="width:100%;border-radius:10px;display:block;">
-    <p style="font-size:12.5px;color:#6b7280;margin-top:10px;">长按图片可保存，或点下方按钮下载</p>
+    <p id="imgTip" style="font-size:12.5px;color:#6b7280;margin-top:10px;">长按图片可保存，或点下方按钮下载</p>
     <button class="btn-main" id="imgDlBtn" style="width:100%;margin-top:8px;">⬇️ 下载图片</button>
   </div>
 </div>
@@ -778,15 +778,29 @@
     ctx.fillStyle = '#9ca3af'; ctx.font = '24px ' + FONT; ctx.textAlign = 'center';
     ctx.fillText('晋江何教练 · 私教训练指导', W / 2, H - 34);
 
-    var url = cv.toDataURL('image/png');
     document.getElementById('imgModalTitle').textContent = s.title;
-    document.getElementById('imgOut').src = url;
-    document.getElementById('imgDlBtn').onclick = function(){
-      var a = document.createElement('a');
-      a.href = url; a.download = '私教课计划·' + s.title + '.png';
-      document.body.appendChild(a); a.click(); a.remove();
-    };
-    document.getElementById('imgModal').style.display = 'flex';
+    var fname = '私教课计划·' + s.title + '.png';
+    var imgEl = document.getElementById('imgOut');
+    var dlBtn = document.getElementById('imgDlBtn');
+    function present(url){
+      if(window.__planBlobUrl){ try{ URL.revokeObjectURL(window.__planBlobUrl); }catch(e){} }
+      window.__planBlobUrl = /^blob:/.test(url) ? url : null;
+      imgEl.src = url;
+      dlBtn.onclick = function(){
+        var a = document.createElement('a');
+        a.href = url; a.download = fname;
+        document.body.appendChild(a); a.click(); a.remove();
+      };
+      document.getElementById('imgTip').textContent = /MicroMessenger/i.test(navigator.userAgent)
+        ? '微信内常拦截保存：点右上角「···」→ 在浏览器打开 → 再长按图片保存'
+        : '长按图片可保存，或点下方按钮下载';
+      document.getElementById('imgModal').style.display = 'flex';
+    }
+    if(cv.toBlob){
+      cv.toBlob(function(blob){ present(URL.createObjectURL(blob)); }, 'image/png');
+    } else {
+      present(cv.toDataURL('image/png'));
+    }
   }
   function closeImgModal(){
     document.getElementById('imgModal').style.display = 'none';
