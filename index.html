@@ -199,6 +199,11 @@
   .plan p{font-size:13.5px; margin:6px 0;}
   .plan b{color:var(--green);}
   .plan-sec{font-size:15px; font-weight:700; color:var(--green); margin:12px 0 4px;}
+  .plan-dl{
+    background:#fff; color:var(--green); border:1.5px solid var(--green);
+    border-radius:8px; padding:7px 14px; font-size:13px; cursor:pointer; margin-top:10px;
+  }
+  .plan-dl:active{transform:scale(.97);}
 
   /* ===== 手机端优化 ===== */
   @media (max-width:600px){
@@ -425,20 +430,17 @@
     <p class="session-meta">每节课的训练安排都记在这里：课前当预告，课后当存档，最新一节在最上面。</p>
   </div>
 
-  <div class="card">
-    <h2><span class="n">15</span>第15节 · 新场地首课</h2>
-    <p class="session-meta">2026-09-13 · 16:30-17:30 · 室内力量 30min + 操场徒手 30min</p>
-    <div class="plan">
-      <div class="plan-sec">🏋️ 室内 30min · 力量循环</div>
-      <p><b>热身 10min</b>：泡沫轴放松全身 → 下犬式 → 倒V旋转 → 最伟大伸展 → 燕式平衡 → 臀部激活</p>
-      <p><b>主训 17min · 3站循环 × 3轮</b>（动作间休45秒，轮间休75秒）：<br>① 坐姿推胸机 ×12<br>② 高位下拉 ×12<br>③ 哑铃高脚杯深蹲 ×10（5kg 起步，"抱西瓜慢慢坐"）<br>状态好加第4轮（次数减半），不好直接收</p>
-      <p><b>收整 3min</b>：甩腿、胸背各拉20秒，拿水去操场</p>
-      <div class="plan-sec">🏃 户外 30min · 操场闯5关（1关 = 1圈400米）</div>
-      <p><b>每一圈的走法</b>：弯道快走 → 直道慢跑 → 弯道快走 → 直道缓走 → 回到教练面前做动作30秒 + 喝2口水 → 击掌，过关！</p>
-      <p><b>5关动作</b>：① 高抬腿走 ② 开合跳（轻跳） ③ 徒手深蹲 ④ 后踢腿走 ⑤ 弓步走10步<br>5关 = 5圈 ≈ 2公里</p>
-    </div>
-  </div>
+  <div id="trainList"></div>
 
+</div>
+
+<div class="modal-mask" id="imgModal" style="display:none;" onclick="if(event.target===this)closeImgModal()">
+  <div class="modal-card">
+    <div class="modal-head"><span id="imgModalTitle">计划图片</span><button onclick="closeImgModal()">✕</button></div>
+    <img id="imgOut" style="width:100%;border-radius:10px;display:block;">
+    <p style="font-size:12.5px;color:#6b7280;margin-top:10px;">长按图片可保存，或点下方按钮下载</p>
+    <button class="btn-main" id="imgDlBtn" style="width:100%;margin-top:8px;">⬇️ 下载图片</button>
+  </div>
 </div>
 
 <script>
@@ -661,10 +663,140 @@
     cell.textContent = '≈' + Math.round(17.5 * w + 651) + ' kcal';
   }
 
+  // ===== 私教课计划（数据驱动渲染 + 存为图片）=====
+  var SESSIONS = [
+    {
+      no: '15',
+      title: '第15节 · 新场地首课',
+      meta: '2026-09-13 · 16:30-17:30 · 室内力量 30min + 操场徒手 30min',
+      blocks: [
+        { sec: '🏋️ 室内 30min · 力量循环', lines: [
+          { b: '热身 10min', t: '泡沫轴放松全身 → 下犬式 → 倒V旋转 → 最伟大伸展 → 燕式平衡 → 臀部激活' },
+          { b: '主训 17min · 3站循环 × 3轮', t: '（动作间休45秒，轮间休75秒）\n① 坐姿推胸机 ×12\n② 高位下拉 ×12\n③ 哑铃高脚杯深蹲 ×10（5kg 起步，抱西瓜慢慢坐）\n状态好加第4轮（次数减半），不好直接收' },
+          { b: '收整 3min', t: '甩腿、胸背各拉20秒，拿水去操场' }
+        ]},
+        { sec: '🏃 户外 30min · 操场闯5关（1关 = 1圈400米）', lines: [
+          { b: '每一圈的走法', t: '弯道快走 → 直道慢跑 → 弯道快走 → 直道缓走 → 回到教练面前做动作30秒 + 喝2口水 → 击掌，过关！' },
+          { b: '5关动作', t: '① 高抬腿走 ② 开合跳（轻跳） ③ 徒手深蹲 ④ 后踢腿走 ⑤ 弓步走10步\n5关 = 5圈 ≈ 2公里' }
+        ]}
+      ]
+    }
+  ];
+
+  function renderTrain(){
+    var box = document.getElementById('trainList');
+    if(!box) return;
+    var html = '';
+    SESSIONS.forEach(function(s, i){
+      html += '<div class="card">'
+        + '<h2><span class="n">' + s.no + '</span>' + s.title + '</h2>'
+        + '<p class="session-meta">' + s.meta + '</p>'
+        + '<div class="plan">';
+      s.blocks.forEach(function(bl){
+        html += '<div class="plan-sec">' + bl.sec + '</div>';
+        bl.lines.forEach(function(l){
+          html += '<p><b>' + l.b + '</b>：' + l.t.replace(/\n/g, '<br>') + '</p>';
+        });
+      });
+      html += '</div><button class="plan-dl" onclick="savePlanImg(' + i + ')">📥 存为图片（发家长用）</button></div>';
+    });
+    box.innerHTML = html;
+  }
+
+  function wrapLines(ctx, text, maxW){
+    var out = [];
+    String(text).split('\n').forEach(function(seg){
+      var cur = '';
+      for(var i = 0; i < seg.length; i++){
+        var t = cur + seg[i];
+        if(ctx.measureText(t).width > maxW && cur){ out.push(cur); cur = seg[i]; }
+        else cur = t;
+      }
+      out.push(cur);
+    });
+    return out;
+  }
+
+  function savePlanImg(i){
+    var s = SESSIONS[i];
+    var FONT = '-apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+    var W = 750, P = 44, TW = W - P * 2, HEAD = 210, FOOT = 110, SCALE = 2;
+    var cv = document.createElement('canvas');
+    var ctx = cv.getContext('2d');
+
+    var items = [];
+    function add(text, font, color, lineH, gap, bar){
+      ctx.font = font;
+      items.push({ lines: wrapLines(ctx, text, TW - (bar ? 20 : 0)), font: font, color: color, lineH: lineH, gap: gap, bar: !!bar });
+    }
+    add(s.meta, '26px ' + FONT, '#6b7280', 38, 30);
+    s.blocks.forEach(function(bl){
+      add(bl.sec, 'bold 30px ' + FONT, '#1a7f5a', 44, 24, true);
+      bl.lines.forEach(function(l){
+        add(l.b + '：' + l.t, '28px ' + FONT, '#1f2937', 42, 10);
+      });
+    });
+
+    var H = HEAD + 16;
+    items.forEach(function(it){ H += it.gap + it.lines.length * it.lineH; });
+    H += FOOT;
+
+    cv.width = W * SCALE; cv.height = H * SCALE;
+    ctx.scale(SCALE, SCALE);
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+
+    var g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, '#0f6b4b'); g.addColorStop(1, '#27a374');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, HEAD);
+    ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
+    ctx.fillStyle = 'rgba(255,255,255,.92)';
+    ctx.font = '26px ' + FONT;
+    ctx.fillText('🏃 何教练 · 私教课计划', P, 66);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 40px ' + FONT;
+    ctx.fillText(s.title, P, 136);
+    ctx.fillStyle = 'rgba(255,255,255,.85)';
+    ctx.font = '24px ' + FONT;
+    ctx.fillText('黄晨乐 · 专属训练档案', P, 178);
+
+    var y = HEAD + 16 + 36;
+    items.forEach(function(it){
+      y += it.gap;
+      if(it.bar){
+        ctx.fillStyle = '#1a7f5a';
+        ctx.fillRect(P, y - 26, 8, 30);
+      }
+      ctx.font = it.font; ctx.fillStyle = it.color;
+      it.lines.forEach(function(ln){
+        ctx.fillText(ln, P + (it.bar ? 22 : 0), y);
+        y += it.lineH;
+      });
+    });
+
+    ctx.strokeStyle = '#e5e7eb';
+    ctx.beginPath(); ctx.moveTo(P, H - 72); ctx.lineTo(W - P, H - 72); ctx.stroke();
+    ctx.fillStyle = '#9ca3af'; ctx.font = '24px ' + FONT; ctx.textAlign = 'center';
+    ctx.fillText('晋江何教练 · 私教训练指导', W / 2, H - 34);
+
+    var url = cv.toDataURL('image/png');
+    document.getElementById('imgModalTitle').textContent = s.title;
+    document.getElementById('imgOut').src = url;
+    document.getElementById('imgDlBtn').onclick = function(){
+      var a = document.createElement('a');
+      a.href = url; a.download = '私教课计划·' + s.title + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+    };
+    document.getElementById('imgModal').style.display = 'flex';
+  }
+  function closeImgModal(){
+    document.getElementById('imgModal').style.display = 'none';
+  }
+
   // ===== 初始化 =====
   applyHash();
   render();
   renderBMR();
+  renderTrain();
 </script>
 
 </body>
